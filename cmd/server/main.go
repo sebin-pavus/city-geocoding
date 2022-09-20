@@ -1,13 +1,40 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/sebin-pavus/city-geocoding/internal/web"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"strings"
 )
 
 func main() {
-	router := gin.Default()
-	web.NewServer(router)
 
-	router.Run("0.0.0.0:8080")
+	content, err := ioutil.ReadFile("./../../input")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	ans := string(content)
+	pri := strings.Split(ans, "\r")
+
+	f, err := os.Create("./../../output")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer f.Close()
+
+	for i := 0; i < len(pri); i++ {
+		_, err2 := f.WriteString(pri[i] + "\r")
+
+		if err2 != nil {
+			log.Fatal(err2)
+		}
+
+	}
+
+	fmt.Println("done")
 }
